@@ -147,6 +147,7 @@ public class EasyAI extends GameComputerPlayer implements Animator {
     }
 
     public Card playCard() {
+        strategy();
         if(checkIfCardinHand(chosenCard)==true){
             //if they have this card, then take it away from the AI player's hand!
             //to do this we need to make sure that we can get the array of cards in the player's hand!

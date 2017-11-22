@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\sarah\AndroidStudioProjects\CurrentHeartsGame\CurrentHeartsGame3.iml" filepath="C:\Users\sarah\AndroidStudioProjects\CurrentHeartsGame\CurrentHeartsGame3.iml" />
       <module fileurl="file://$PROJECT_DIR$/NewHeartsGame.iml" filepath="$PROJECT_DIR$/NewHeartsGame.iml" />
       <module fileurl="file://C:\Users\lytle\Documents\Object1\NewHeartsGame\NewHeartsGame.iml" filepath="C:\Users\lytle\Documents\Object1\NewHeartsGame\NewHeartsGame.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />

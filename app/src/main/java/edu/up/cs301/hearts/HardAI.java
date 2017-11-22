@@ -1,30 +1,35 @@
 package edu.up.cs301.hearts;
 
+import android.app.Activity;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+
 import java.util.Random;
 
+import edu.up.cs301.animation.AnimationSurface;
+import edu.up.cs301.animation.Animator;
 import edu.up.cs301.card.Card;
 import edu.up.cs301.card.Rank;
 import edu.up.cs301.card.Suit;
 import edu.up.cs301.game.GameComputerPlayer;
+import edu.up.cs301.game.GameMainActivity;
 import edu.up.cs301.game.GamePlayer;
+import edu.up.cs301.game.R;
 import edu.up.cs301.game.infoMsg.GameInfo;
+import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
+import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
 
 /**
  * Updated by S. Seydlitz on 11/17/17
+ */
 
-*/
-public class EasyAI extends GameComputerPlayer {
+public class HardAI extends GameComputerPlayer implements Animator {
 
-    public EasyAI(String playerName) {
-        super(playerName);
-    }
-
-    protected void receiveInfo(GameInfo info) {
-
-    }
-
-    GamePlayer thisGuy = HeartsGameState.CurrentPlayer(); //This is causing so many problems
-    CardDeck currentHand = new CardDeck(thisGuy.hand);
+    //variables
+    CardDeck currentHand;
     Table table = new Table();
     Suit baseSuit = table.getSuitIndex();
     //boolean heartsPlayed = false;
@@ -36,6 +41,66 @@ public class EasyAI extends GameComputerPlayer {
     boolean hasTwoOfClubs = false;
     int score = 0;
     String name;
+    // our game state
+    protected HeartsGameState state;
+
+    // our activity
+    private Activity myActivity;
+
+    // the amination surface
+    private AnimationSurface surface;
+
+
+    public HardAI(String playerName) {
+        super(playerName);
+    }
+
+    public void setAsGui(GameMainActivity activity) {
+
+        // remember the activity
+        myActivity = activity;
+
+        // Load the layout resource for the new configuration
+        activity.setContentView(R.layout.sj_human_player);// change to hearts
+
+        // link the animator (this object) to the animation surface
+        surface = (AnimationSurface) myActivity
+                .findViewById(R.id.animation_surface);
+        surface.setAnimator(this);
+
+        // read in the card images
+        edu.up.cs301.card.Card.initImages(activity);
+
+        // if the state is not null, simulate having just received the state so that
+        // any state-related processing is done
+        if (state != null) {
+            receiveInfo(state);
+        }
+
+    }
+
+    public void receiveInfo(GameInfo info) {
+        Log.i("HeartsComputerPlayer", "receiving updated state ("+info.getClass()+")");
+        if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
+            // if we had an out-of-turn or illegal move, flash the screen
+            surface.flash(Color.RED, 50);
+        }
+        else if (!(info instanceof HeartsGameState)) {
+            // otherwise, if it's not a game-state message, ignore
+            return;
+        }
+        else {
+            // it's a game-state object: update the state. Since we have an animation
+            // going, there is no need to explicitly display anything. That will happen
+            // at the next animation-tick, which should occur within 1/20 of a second
+            this.state = (HeartsGameState)info;
+            Log.i("computer player", "receiving");
+        }
+
+        int ind = state.CurrentPlayerIndex;
+        //I need the current player so I can call their hand!!!!!!
+        currentHand = new CardDeck(state.piles[ind]);
+    }
 
     public void strategy() {
 
@@ -81,6 +146,7 @@ public class EasyAI extends GameComputerPlayer {
     }
 
     public Card playCard() {
+        strategy();
         if(checkIfCardinHand(chosenCard)==true){
             //if they have this card, then take it away from the AI player's hand!
             //to do this we need to make sure that we can get the array of cards in the player's hand!
@@ -98,7 +164,6 @@ public class EasyAI extends GameComputerPlayer {
     public Card[] getMyPass(){
         return myPass;
     }
-
 
     public Card[] getHand(){
         return (Card[]) currentHand.cards.toArray();
@@ -119,11 +184,13 @@ public class EasyAI extends GameComputerPlayer {
     public void setMyPass(Card[] cards){
         myPass = cards;
     }
+
     public void setIsWinner(boolean initWinner){
         isWinner= initWinner;
     }
 
-
+    /*
+    /**
      * Set hand to given list of cards
      * @param initHand - shouldn't be more then
 
@@ -148,7 +215,7 @@ public class EasyAI extends GameComputerPlayer {
         myTurn = initMyTurn;
     }
 
-
+    /*
     public void threeCardPass(Card[] pass, HeartsPlayer p){
         //pass cards to appropriate player
         p.setHand(pass);
@@ -164,7 +231,40 @@ public class EasyAI extends GameComputerPlayer {
     }
 
 
+    */
 
+    /**
+     * @return
+     * 		the amimation interval, in milliseconds
+     */
+    public int interval() {
+        // 1/20 of a second
+        return 50;
+    }
+
+    /**
+     * @return
+     * 		the background color
+     */
+    public int backgroundColor() {
+        return Color.GREEN;
+    }
+
+    /**
+     * @return
+     * 		whether the animation should be paused
+     */
+    public boolean doPause() {
+        return false;
+    }
+
+    /**
+     * @return
+     * 		whether the animation should be terminated
+     */
+    public boolean doQuit() {
+        return false;
+    }
 
     public boolean checkIfCardinHand(Card card){
         for(Card c: currentHand.cards){
@@ -183,5 +283,14 @@ public class EasyAI extends GameComputerPlayer {
         }
         return false;
     }
+
+    public void tick(Canvas g) {
+        // ignore if we have not yet received the game state
+        if (state == null) return;
+        //getCanvas(g);
+    }
+
+    public void onTouch(MotionEvent me){
+    }
+
 }
- 
