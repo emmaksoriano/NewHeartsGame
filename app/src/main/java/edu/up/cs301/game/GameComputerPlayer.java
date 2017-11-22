@@ -130,6 +130,7 @@ public abstract class GameComputerPlayer implements GamePlayer, Tickable {
 		if(info instanceof HeartsGameState){
 			HeartsGS = (HeartsGameState) info;
 			Log.i("human player", "receiving");
+			name = HeartsGS.CurrentPlayer.toString();
 		}
 		while (myHandler == null) Thread.yield();
 		myHandler.post(new MyRunnable(info));
