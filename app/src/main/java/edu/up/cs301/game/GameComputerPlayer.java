@@ -17,6 +17,7 @@ import edu.up.cs301.hearts.HeartsGameState;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 /**
  * An abstract computerized game player player. This is an abstract class, that
@@ -126,6 +127,10 @@ public abstract class GameComputerPlayer implements GamePlayer, Tickable {
 	 */
 	public final void sendInfo(GameInfo info) {
 		// post the state to the player's thread, waiting (if needed) until handler is there
+		if(info instanceof HeartsGameState){
+			HeartsGS = (HeartsGameState) info;
+			Log.i("human player", "receiving");
+		}
 		while (myHandler == null) Thread.yield();
 		myHandler.post(new MyRunnable(info));
 	}

@@ -53,6 +53,7 @@ public class EasyAI extends GameComputerPlayer implements Animator {
 
     public EasyAI(String playerName) {
         super(playerName);
+        CardDeck cardsdd = this.HeartsGS.piles[playerNum];
     }
 
     public void setAsGui(GameMainActivity activity) {

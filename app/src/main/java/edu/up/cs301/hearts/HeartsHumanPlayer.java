@@ -394,7 +394,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
 
             //Log.i(" finished card draw ",""+i);
         }
-        if (doubleTap==true){
+        if (doubleTap == true){
             //draw selected card in played human spot
             drawCard(g, HcardPile, selectedCard);
             p = new Paint();
