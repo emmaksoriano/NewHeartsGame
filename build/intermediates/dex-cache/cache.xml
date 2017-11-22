@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/emmasoriano/Desktop/CurrentHeartsGame-2a5c7647e3aff212aded82f0502febbc96e81f2a/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/Users/emmasoriano/Desktop/CurrentHeartsGame-2a5c7647e3aff212aded82f0502febbc96e81f2a/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_b93a413f566a5996783a1eaeb08ef7eee943e1e8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/emmasoriano/Desktop/CurrentHeartsGame-2a5c7647e3aff212aded82f0502febbc96e81f2a/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="0ffa24ce277cfe9ae04e05f3d54f6f32e228eefa">
+        <dex dex="/Users/emmasoriano/Desktop/CurrentHeartsGame-2a5c7647e3aff212aded82f0502febbc96e81f2a/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_cfda777043545917d3f9fc362c3d301b60b38bfc/classes.dex" />
+    </item>
+
+</items>

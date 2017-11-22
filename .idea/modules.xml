@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CurrentHeartsGame-2a5c7647e3aff212aded82f0502febbc96e81f2a.iml" filepath="$PROJECT_DIR$/CurrentHeartsGame-2a5c7647e3aff212aded82f0502febbc96e81f2a.iml" />
+      <module fileurl="file://C:\Users\sarah\AndroidStudioProjects\CurrentHeartsGame\CurrentHeartsGame3.iml" filepath="C:\Users\sarah\AndroidStudioProjects\CurrentHeartsGame\CurrentHeartsGame3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+    </modules>
+  </component>
+</project>
