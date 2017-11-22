@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -50,37 +52,38 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
     boolean doubleTap=false;
     Card cardToPlay;
     boolean singleTap=false;
-
-
+    String currentPlayer="empty";
+    boolean AI1HasPlayed= false;
+    boolean AI2HasPlayed= false;
+    boolean AI3HasPlayed= false;
+    boolean HumanHasPlayed= false;
 
     //instance variables added from HeartsPlayer class
     CardDeck hand;
     Card[] collection;
     Card[] myPass = new Card[2];
     boolean myTurn = false;
+
     boolean isWinner = false;
     boolean hasTwoOfClubs = false;
     int score = 0;
     String name;
 
-
-    public RectF checkCardRect;
-    float left, right, top, bottom=0;
-    public Card playMeCard;
     int count=0;
     Canvas g=new Canvas();
-    boolean touchedQuestionMark= false ;
+
 
     private  Card [] humanCards;
 
     private  RectF [] cardLocationY;
-    private ArrayList<Card> cards;
+
     private Card c;
     private Card selectedCard;
 
 
     private  RectF [] cardLocation;
 
+    TextView turnId;
 
     // sizes and locations of card decks and cards, expressed as percentages
     // of the screen height and width
@@ -179,9 +182,8 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
 
         // if the state is not null, simulate having just received the state so that
         // any state-related processing is done
-        if (state != null) {
-            receiveInfo(state);
-        }
+        if (state != null) {receiveInfo(state);}
+
     }
 
     /**
@@ -235,7 +237,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
             if (cardLocation[n].contains(midTopLocation)) {
 
                 cardLocation[n] = midTopLocation;
-                System.out.println("added mid top loc to array  " + midTopLocation);
+                //System.out.println("added mid top loc to array  " + midTopLocation);
             }
         }
     }
@@ -254,7 +256,6 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
 
         // ignore if we have not yet received the game state
         if (state == null) return;
-        //getCanvas(g);
 
 
         CardDeck myDeck = state.getDeck(0);
@@ -267,7 +268,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
             humanCards=new Card[14];
             cardLocationBool = new boolean[14];
 
-            System.out.println("touch squares havent been initalized  ");
+            //System.out.println("touch squares havent been initalized  ");
 
             // get the height and width of the animation surface
             int height = surface.getHeight();
@@ -325,26 +326,32 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
 
         float AI1rectLeft = 250;
         float AI1rectRight = 400;
-        float AI1rectTop = 200;
-        float AI1rectBottom = 400;
+        float AI1rectTop = 300;
+        float AI1rectBottom = 500;
 
 
 
         RectF aI1cardPile = new RectF(AI1rectLeft, AI1rectTop, AI1rectRight, AI1rectBottom);
-        drawCard(g, aI1cardPile, c);
+        if (AI1HasPlayed)drawCard(g, aI1cardPile, c);
+        else drawCardBacks(g, aI1cardPile, 0, 0, 1);
+
+
+        //drawCard(g, aI1cardPile, c);
 
 
         // draw the  second AI's played card
         float AI2rectLeft = 1050;
         float AI2rectRight = 1200;
-        float AI2rectTop = 200;
-        float AI2rectBottom = 400;
+        float AI2rectTop = 300;
+        float AI2rectBottom = 500;
 
 
         c = state.getDeck(0).peekAtPlayerCard();// currently one of your own cards
 
         RectF aI2cardPile = new RectF(AI2rectLeft, AI2rectTop, AI2rectRight, AI2rectBottom);
-        drawCard(g, aI2cardPile, c);
+        if (AI2HasPlayed)drawCard(g, aI2cardPile, c);
+        else drawCardBacks(g, aI2cardPile, 0, 0, 1);
+
 
 
         //Draw the card the human played
@@ -359,7 +366,8 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
         c = state.getDeck(0).peekAtPlayerCard();// currently one of your own cards
 
         RectF HcardPile = new RectF(HrectLeft, HrectTop, HrectRight, HrectBottom);
-        drawCard(g, HcardPile, c);
+        if (HumanHasPlayed)drawCard(g, HcardPile, c);
+        else drawCardBacks(g, HcardPile, 0, 0, 1);
 
         // draw the third AI's played card
 
@@ -372,7 +380,8 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
         c = state.getDeck(0).peekAtPlayerCard();// currently one of your own cards
 
         RectF aI3cardPile = new RectF(AI3rectLeft, AI3rectTop, AI3rectRight, AI3rectBottom);
-        drawCard(g, aI3cardPile, c);
+        if (AI3HasPlayed)drawCard(g, aI3cardPile, c);
+        else drawCardBacks(g, aI3cardPile, 0, 0, 1);
 
 
 
@@ -401,7 +410,9 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
             //humanCards[count]=null;
             drawMe=true;
 
+            // String currentPlayer="human";
 
+            // turnId.setText("It is "+currentPlayer+"'s turn.");
 
         }
         if (count==14||count==12) {
@@ -426,9 +437,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
 */
     }
 
-    public void reset(){
-        doubleTap=false;
-    }
+
 
     /**
      * @return
@@ -519,7 +528,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
      * 		the motion-event
      */
     public void onTouch(MotionEvent event) {
-
+        boolean dontFlash= false;
         // ignore everything except down-touch events
         if (event.getAction() != MotionEvent.ACTION_DOWN) return;
 
@@ -534,7 +543,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
         if(cardLocation != null){
             for (int n=0; n<=13; n++) {
                 if (cardLocation[n].contains(x, y)) {
-
+                    dontFlash=true;
                     selectedCard=humanCards[n];
                     if (singleTap==false){
                         selectedCard=humanCards[n];
@@ -558,7 +567,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
                     cardToPlay=humanCards[n];
 
 
-                    System.out.println("I've been touched!   " + cardLocation[n]);
+                    //System.out.println("I've been touched!   " + cardLocation[n]);
                     RectF touched = cardLocation[n];
                     count =n;
                     //highlightCard(touched, count);
@@ -566,32 +575,16 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
 
                 }
             }
-
-            //else {
-            //illegal touch-location: flash for 1/20 second
-            //	surface.flash(Color.RED, 50);
-            //}
         }
+
+        if (dontFlash==false){ surface.flash(Color.RED, 50);}
     }
 
     public void highlightCard(RectF initcard, int count){
 
-        //Canvas g= canvas;
-        System.out.println("Turn me yellow   "+ initcard);
-
         Paint p = new Paint();
         p.setColor(Color.YELLOW);
-
-        System.out.println("Turn me yellow NOW   "+ cardLocationY[count]);
         g.drawRect(cardLocationY[count],p);
-//        RectF checkCardRect= initcard;
-
-        //RectF checkCardRect=initcard 20;
-
-        //RectF yellow= new RectF(checkCardRect);
-        //System.out.println("Turn me yellow   "+ yellow);
-
-        //drawRect(g, cardLocationY[i],c);
 
     }
 
@@ -731,7 +724,7 @@ public class HeartsHumanPlayer extends GameHumanPlayer implements Animator {
         }
     }
 
-        public boolean checkIfCardInHand(Card card){
+    public boolean checkIfCardInHand(Card card){
         for(Card c: hand.cards){
             if(c.equals(card)){
                 return true;
