@@ -77,9 +77,7 @@ public class HeartsGameState extends GameState {
      * game, with a random player as the first to turn card
      */
     public HeartsGameState() {
-        // randomly pick the player who starts
-        //toPlay = (int)(2*Math.random());
-        toPlay = hasTwoOfClubs();
+
 
         // initialize the decks as follows:
         // - each player deck (#0 and #1) gets half the cards, randomly
@@ -90,8 +88,14 @@ public class HeartsGameState extends GameState {
         piles[1] = new CardDeck(); // create empty deck
         piles[2] = new CardDeck(); // create empty deck
         piles[3] = new CardDeck(); // create empty deck
-        piles[toPlay].add52(); // give all cards to player whose turn it is, in order
-        piles[toPlay].shuffle(); // shuffle the cards
+
+        CardDeck deck = new CardDeck();
+        deck.add52();
+        deck.shuffle();
+
+
+        //piles[toPlay].add52(); // give all cards to player whose turn it is, in order
+        //piles[toPlay].shuffle(); // shuffle the cards
         // move cards to opponent, until to piles have ~same size
         int counter = 0;
         int i=0;
@@ -100,9 +104,13 @@ public class HeartsGameState extends GameState {
                 counter=0;
                 i++;
             }
-            piles[toPlay].moveTopCardTo(piles[i]);
+            deck.moveTopCardTo(piles[i]);
             counter++;
         }while(counter<=4);
+
+        // randomly pick the player who starts
+        //toPlay = (int)(2*Math.random());
+        toPlay = hasTwoOfClubs();
     }
 
     /**
@@ -145,7 +153,6 @@ public class HeartsGameState extends GameState {
         if((index >= 0)&&(index <= 3)){
             CurrentPlayer = players[index];
             CurrentPlayerIndex = index;
-
         }
     }
 
@@ -216,9 +223,11 @@ public class HeartsGameState extends GameState {
         Card twoClubs = new Card(Rank.TWO, Suit.Club);
         int num = 0;
         for(int i = 0; i<players.length;i++){
-            //if(players[i].checkIfCardInHand(twoClubs)){
-                //num= i;
-            //}
+            for(Card c:piles[i].cards){
+                if(c.equals(twoClubs)){
+                    num= i;
+                }
+            }
         }
         return num;
     }
